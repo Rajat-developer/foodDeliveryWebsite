@@ -33,6 +33,12 @@ export default function Home() {
     loadData();
   }, []);
 
+  const carouselImages = [
+    "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/02/chilli-paneer-recipe.jpg",
+    "https://media.istockphoto.com/id/1309352410/photo/cheeseburger-with-tomato-and-lettuce-on-wooden-board.jpg?s=612x612&w=0&k=20&c=lfsA0dHDMQdam2M1yvva0_RXfjAyp4gyLtx4YUJmXgg=",
+    "https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg"
+  ];
+
   return (
     <div>
       <Navbar />
@@ -57,30 +63,19 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="carousel-item active">
-              <img
-                src="https://www.indianhealthyrecipes.com/wp-content/uploads/2022/02/chilli-paneer-recipe.jpg"
-                className="d-block w-100"
-                style={{ objectFit: "contain", filter: "brightness(50%)" }}
-                alt="..."
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                src="https://media.istockphoto.com/id/1309352410/photo/cheeseburger-with-tomato-and-lettuce-on-wooden-board.jpg?s=612x612&w=0&k=20&c=lfsA0dHDMQdam2M1yvva0_RXfjAyp4gyLtx4YUJmXgg="
-                className="d-block w-100"
-                style={{ objectFit: "contain", filter: "brightness(50%)" }}
-                alt="..."
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                src=""
-                className="d-block w-100"
-                style={{ objectFit: "contain", filter: "brightness(50%)" }}
-                alt="..."
-              />
-            </div>
+            {carouselImages.map((image, index) => (
+              <div
+                className={`carousel-item ${index === 0 ? "active" : ""}`}
+                key={index}
+              >
+                <img
+                  src={image}
+                  className="d-block w-100"
+                  style={{ objectFit: "cover", filter: "brightness(50%)" }}
+                  alt={`Slide ${index + 1}`}
+                />
+              </div>
+            ))}
           </div>
           <button
             className="carousel-control-prev"
@@ -109,38 +104,34 @@ export default function Home() {
         </div>
       </div>
       <div className="container">
-        {foodCat !== []
-          ? foodCat.map((data) => {
-              return (
-                <div className="row mb-3" key={data._id}>
-                  <div className="fs-3 m-3">{data.CategoryName}</div>
-                  <hr />
-                  {foodItem !== [] ? (
-                    foodItem
-                      .filter(
-                        (item) =>
-                          item.CategoryName === data.CategoryName &&
-                          item.name.toLowerCase().includes(search)
-                      )
-                      .map((filterItems) => {
-                        return (
-                          <div
-                            key={filterItems._id}
-                            className="col-12 col-md-6 col-lg-3"
-                          >
-                            <Card
-                              foodItem={filterItems}
-                              options={filterItems.options[0]}
-                            ></Card>
-                          </div>
-                        );
-                      })
-                  ) : (
-                    <div>No such data found </div>
-                  )}
-                </div>
-              );
-            })
+        {foodCat.length > 0
+          ? foodCat.map((data) => (
+              <div className="row mb-3" key={data._id}>
+                <div className="fs-3 m-3">{data.CategoryName}</div>
+                <hr />
+                {foodItem.length > 0 ? (
+                  foodItem
+                    .filter(
+                      (item) =>
+                        item.CategoryName === data.CategoryName &&
+                        item.name.toLowerCase().includes(search.toLowerCase())
+                    )
+                    .map((filterItems) => (
+                      <div
+                        key={filterItems._id}
+                        className="col-12 col-md-6 col-lg-3"
+                      >
+                        <Card
+                          foodItem={filterItems}
+                          options={filterItems.options[0]}
+                        ></Card>
+                      </div>
+                    ))
+                ) : (
+                  <div>No such data found</div>
+                )}
+              </div>
+            ))
           : ""}
       </div>
 
